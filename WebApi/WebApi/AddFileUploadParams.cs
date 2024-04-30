@@ -21,7 +21,7 @@ namespace WebApi
                                 Type = "object",
                                 Properties = new Dictionary<string, OpenApiSchema>
                                 {
-                                    ["htmlFile"] = new OpenApiSchema
+                                    ["inputFile"] = new OpenApiSchema
                                     {
                                         Type = "string",
                                         Format = "binary"

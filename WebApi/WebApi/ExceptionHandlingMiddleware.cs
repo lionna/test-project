@@ -1,9 +1,9 @@
-﻿using System.Net;
-using System.Text.Json;
-using Converter.Api.Service.Exceptions;
-using Converter.Api.Service.Settings;
+﻿using Converter.Service.Exceptions;
+using Converter.Service.Settings;
 using Microsoft.Extensions.Options;
-using FileNotFoundException = Converter.Api.Service.Exceptions.FileNotFoundException;
+using System.Net;
+using System.Text.Json;
+using FileNotFoundException = Converter.Service.Exceptions.FileNotFoundException;
 
 namespace WebApi
 {

@@ -7,8 +7,10 @@ namespace WebApi
     {
         [JsonPropertyName("errorCode")]
         public int ErrorCode { get; set; }
+
         [JsonPropertyName("message")]
         public string Message { get; set; }
+
         [JsonPropertyName("result")]
         public object Result { get; set; }
 

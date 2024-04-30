@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\Converter.Service\Converter.Service.csproj" />
   </ItemGroup>
 
 </Project>

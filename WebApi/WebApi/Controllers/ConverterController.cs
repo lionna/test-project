@@ -1,6 +1,7 @@
-﻿using Converter.Api.Service.Extensions;
-using Converter.Api.Service.Services.Interfaces;
-using Converter.Api.Service.Settings;
+﻿using Converter.Service.Extensions;
+using Converter.Service.Model;
+using Converter.Service.Services.Interfaces;
+using Converter.Service.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -28,9 +29,9 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get details of a specific file by ID.
+        /// Get details of a specific file by Id.
         /// </summary>
-        /// <param name="id">The ID of the file.</param>
+        /// <param name="id">The Id of the file.</param>
         /// <returns>Details of the file.</returns>
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Detail(Guid id)
@@ -48,22 +49,40 @@ namespace WebApi.Controllers
         /// <summary>
         /// Convert HTML file to PDF.
         /// </summary>
-        /// <param name="htmlFile">The HTML file to convert.</param>
+        /// <param name="inputFile">The HTML file to convert.</param>
         /// <returns>Result of the conversion operation.</returns>
         [HttpPost]
         [RequestSizeLimit(MaxFileSize)]
         [RequestFormLimits(MultipartBodyLengthLimit = MaxFileSize)]
-        public async Task<IActionResult> Create([FromForm] IFormFile htmlFile)
+        public async Task<IActionResult> Create([FromForm] IFormFile inputFile)
         {
-            var resultModel = await FileService.ConvertAsync(htmlFile);
+            if (inputFile == null || inputFile.Length == 0)
+            {
+                return BadRequest("Input file is missing or empty.");
+            }
 
-            return Ok(new { result = resultModel });
+            using (var ms = new MemoryStream())
+            {
+                await inputFile.CopyToAsync(ms);
+                var fileContent = ms.ToArray();
+
+                var file = new FileRequestModel
+                {
+                    Content = fileContent,
+                    Length = inputFile.Length,
+                    FileName = inputFile.FileName
+                };
+
+                var resultModel = await FileService.ConvertAsync(file);
+
+                return Ok(new { result = resultModel });
+            }
         }
 
         /// <summary>
-        /// Delete a file by ID.
+        /// Delete a file by Id.
         /// </summary>
-        /// <param name="id">The ID of the file to delete.</param>
+        /// <param name="id">The Id of the file to delete.</param>
         /// <returns>Status code indicating the success of the deletion operation.</returns>
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
